@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import Chats from '../Components/Chats'
 
 
 function MainPage() {
@@ -50,7 +51,7 @@ function MainPage() {
                         </div>
                         {/* DATA */}
                         <Routes>
-                        {/* COMPONENTS */}
+                            <Route path="chats" element={ <Chats/> } />
                         </Routes>
                     </div>
                 </div>

@@ -3,6 +3,8 @@ const http = require('http')
 const { Server } = require('socket.io')
 const cors = require('cors')
 const moment = require('moment')
+const socketChatController = require('./Controller/ChatSocketController')
+const AuthRouter = require('./Routes/Auth')
 
 const app = express()
 
@@ -19,27 +21,11 @@ const io = new Server(server, {
     }
 })
 
-//GET TIME TODAY
+//API ENDPOINTS
+app.use('/api/testing', AuthRouter)
 
-io.on("connection", (socket) => {
-    console.log(`User is connected ${socket.id}`)
-
-    //Recieving Messages
-    socket.on("sendMessage", (data) => {
-        io.emit('recieveMessage', {message: data.message, time: new Date().toLocaleTimeString(), sender: socket.id})
-    })
-    
-    //handles typing
-    socket.on('handle-typing', (data) => {
-        socket.broadcast.emit('receive-typing', (data))
-    })
-
-
-    //User Disconnect
-    socket.on("disconnect", () => {
-        console.log(`client disconnected ${socket.id}`)
-    })
-})
+//WEB SOCKETS
+socketChatController(io)
 
 server.listen(3000, () => {
     console.log("server is running")

@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import { useSocket } from '../Context/SocketContext'
 import _ from 'lodash';
 
-const socket = io.connect("http://localhost:3000");
+
 
 function Chats() {
-
+    const socket = useSocket();
     const [message, setMessage] = useState('');
     const [recieve, setRecieve] = useState([]);
-    const [userId, setUserId] = useState(socket.id);
+    const [userId, setUserId] = useState('');
     const [isTyping, setIsTyping] = useState(false)
-  
+
+    //Socket Connection From Context
     
     useEffect(() => {
+
+      if (!socket) return;
   
       socket.on('connect', () => {
         setUserId(socket.id);
@@ -43,6 +46,7 @@ function Chats() {
   
     //Handle isTyping
     useEffect(() => {
+      if (!socket) return;
       
       const debouncedEmitTyping = _.debounce(() => {
         if (message.length) {
